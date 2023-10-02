@@ -7,12 +7,15 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.1/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/4.1/ref/settings/
+https://docs.djangoproject.com/en/4.1/xref/settings/
 """
 
 from pathlib import Path
 import os
 import dj_database_url
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 
 # Access environment variables from .env
 from dotenv import load_dotenv
@@ -40,9 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'userAccount',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +62,15 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'csye6225.urls'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',  # Use JSON renderer by default
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',  # Use JSON parser by default
+    ),
+}
 
 TEMPLATES = [
     {
@@ -82,11 +97,13 @@ WSGI_APPLICATION = 'csye6225.wsgi.application'
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
+
 db_from_env = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
 
 DATABASES = {
     'default': db_from_env,
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
